@@ -6,7 +6,7 @@ The 9s Golf Score Tracker is an iOS app designed to make it easy and fun to keep
 
 ## Features
 
-- **Player Entry**: Input players that are participating in the game to initilize the playing of the game.
+- **Player Entry**: Input players that are participating in the game to start playing the game.
 - **Score Entry**: Input scores for each player and hole in real-time.
 - **Leaderboard**: View an up-to-date leaderboard after each hole is scored.
 - **Score Calculation**: Automatic calculation and distribution of the 9 points based on the rules of "9s".
