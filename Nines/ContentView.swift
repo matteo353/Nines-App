@@ -210,10 +210,12 @@ struct PlayGame: View {
                         .padding(.horizontal, 20) // Adds horizontal padding to make it look like a tag
                         .background(Color(red: 0.145, green: 0.376, blue: 0.325)) // Subtle gradient
                         .cornerRadius(15) // Rounded corners
-                        .shadow(radius: 5) // Soft shadow for depth
                         .padding(.horizontal, 20) // Additional padding to provide whitespace around the element
                     Spacer()
                 }
+                .frame(maxWidth: .infinity)
+                .background(Color(red: 0.145, green: 0.376, blue: 0.325)) // Apply the background to the HStack
+                .edgesIgnoringSafeArea(.all)
                 
                 Spacer(minLength: 10)
                 
@@ -242,21 +244,24 @@ struct PlayGame: View {
                 Spacer(minLength: 20) // Adds space
                 
                 
-                
-                // Strokes on Current Hole title, aligned to the left
-                Text("Hole \(viewModel.currentHole)")
-                    .font(.system(size: 34, weight: .bold, design: .rounded)) // Trendy and rounded font
-                    .foregroundColor(.white)
-                    .padding(.vertical, 10) // Adds some vertical padding
-                    .padding(.horizontal, 20) // Adds horizontal padding to make it look like a tag
-                    .background(Color(red: 0.145, green: 0.376, blue: 0.325))
-                    .cornerRadius(15) // Rounded corners
-                    .shadow(radius: 5) // Soft shadow for depth
-                    .padding(.horizontal, 20) // Additional padding to provide whitespace
-                
-                Spacer(minLength: 10)
-                
-                
+                HStack{
+                    // Strokes on Current Hole title, aligned to the left
+                    Text("Hole \(viewModel.currentHole)")
+                        .font(.system(size: 34, weight: .bold, design: .rounded)) // Trendy and rounded font
+                        .foregroundColor(.white)
+                        .padding(.vertical, 10) // Adds some vertical padding
+                        .padding(.horizontal, 20) // Adds horizontal padding to make it look like a tag
+                        .background(Color(red: 0.145, green: 0.376, blue: 0.325))
+                        .cornerRadius(15) // Rounded corners
+                        .padding(.horizontal, 20) // Additional padding to provide whitespace
+                }
+                .frame(maxWidth: .infinity)
+                .background(Color(red: 0.145, green: 0.376, blue: 0.325)) // Apply the background to the HStack
+                .edgesIgnoringSafeArea(.all)
+
+                    Spacer(minLength: 10)
+                    
+            
                 
                 // A custom list-like view for inputting scores for the current hole.
                 VStack(spacing: 2) {
@@ -307,50 +312,100 @@ struct PlayGame: View {
     
 }
 
+
 struct viewScorecard: View {
     @ObservedObject var viewModel: GameViewModel
+
     var body: some View {
         ZStack {
             Color(red: 0.994, green: 0.993, blue: 0.941)
                 .edgesIgnoringSafeArea(.all)
-            VStack{
-                Text("Scorecard")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
+            VStack {
+                Image("Nines logo 3")
+                    .resizable()
+                    .scaledToFit()
+                    .scaleEffect(0.75)
                 
-                // Headers
-                ScrollView([.horizontal]){
-                    HStack {
-                        Text("   ")
-                            .frame(width: 45)
-                        ForEach(1...viewModel.holeScores[0].count, id: \.self) { i in
-                            Text("\(i)")
-                                .frame(width: 20)
-                        }
-                        Text("Total")
-                            .frame(width: 41)
-                    }
-                    .background(Color.gray.opacity(0.2))
-                    
-                    // Score Rows
-                    ForEach(viewModel.players, id: \.id) { player in
-                        HStack {
-                            Text(player.name)
-                                .frame(width: 45)
-                            if let playerIndex = viewModel.players.firstIndex(where: { $0.id == player.id }) {
-                                ForEach(viewModel.holeScores[playerIndex], id: \.self) { score in
-                                    Text("\(score)")
-                                        .frame(width: 20)
-                                }
-                            }
-                            Text("\(player.total_strokes)")
-                                .frame(width: 40)
-                        }
-                        .border(Color(red: 0.04, green: 0.119, blue: 0.24))
-                    }
+                Spacer(minLength: 20)
+                
+                HStack {
+                    Text("Scorecard")
+                        .font(.system(size: 34, weight: .bold, design: .rounded))
+                        .foregroundColor(.white)
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 20)
+                        .background(Color(red: 0.145, green: 0.376, blue: 0.325))
+                        .cornerRadius(15)
                 }
+                .frame(maxWidth: .infinity)
+                .background(Color(red: 0.145, green: 0.376, blue: 0.325))
+                .edgesIgnoringSafeArea(.all)
+                
+                Spacer(minLength: 25)
+                
+                ScrollView([.horizontal], showsIndicators: false) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack(spacing: 0) {
+                            Text("Player")
+                                .frame(width: 80)
+                                .padding(.leading, 20)
+                            ForEach(1...viewModel.holeScores[0].count, id: \.self) { holeNumber in
+                                Text("\(holeNumber)")
+                                    .frame(width: 40)
+                                    .background(viewModel.currentHole == holeNumber ? Color(red: 0.051, green: 0.758, blue: 0.547) : Color.clear)
+                                    .cornerRadius(5)
+                            }
+                            Text("Total")
+                                .frame(width: 60)
+                        }
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .background(Color(red: 0.145, green: 0.376, blue: 0.325))
+                        .cornerRadius(10)
+                        .padding(.trailing, 20)
+                        
+                        ForEach(viewModel.players, id: \.id) { player in
+                            HStack(spacing: 0) {
+                                Text(player.name)
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
+                                    .frame(width: 80)
+                                    .padding(.leading, 20)
+                                    .bold()
+                                ForEach(viewModel.holeScores[viewModel.players.firstIndex(where: { $0.id == player.id }) ?? 0], id: \.self) { score in
+                                    Text("\(score)")
+                                        .frame(width: 40)
+                                }
+                                Text("\(player.total_strokes)")
+                                    .frame(width: 60)
+                            }
+                            .frame(height: 44)
+                            .background(Color(red: 0.039, green: 0.153, blue: 0.239))
+                            .cornerRadius(10)
+                            .foregroundColor(.white)
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                }
+
+                Spacer(minLength: 200)
             }
         }
+    }
+}
+
+struct TruncateModifier: ViewModifier {
+    var maxLength: Int
+
+    func body(content: Content) -> some View {
+        content
+            .overlay(
+                Text(String(repeating: " ", count: maxLength))
+                    .font(.body)
+                    .lineLimit(1)
+                    .hidden()
+            )
+            .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
