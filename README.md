@@ -19,6 +19,7 @@ In "9s", three players compete over a round of golf. After each hole, 9 points a
 - The player with the second-lowest score gets 3 points.
 - The player with the highest score gets 1 point.
 - If two players tie for the lowest score, they get 4 points each, and the third player gets 1 point.
+- If two players tie for the highest score, they get 2 points each, and the third player gets 5 points.
 - If all three players tie, they each get 3 points.
 
 The game continues throughout the round, and the player with the most points at the end is declared the winner.
