@@ -11,7 +11,7 @@ The 9s Golf Score Tracker is an iOS app designed to make it easy and fun to keep
 - **Leaderboard**: View an up-to-date leaderboard after each hole is scored.
 - **Score Calculation**: Automatic calculation and distribution of the 9 points based on the rules of "9s".
 - **Scorecard**: A classic golf scorecard that keeps track of strokes throughout the round.
-## How to Play "9s"
+## How to Play '9s'
 
 In "9s", three players compete over a round of golf. After each hole, 9 points are distributed among the players as follows:
 
