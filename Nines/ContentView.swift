@@ -27,7 +27,7 @@ struct ContentView: View {
                     NavigationLink(destination: AddPlayers(), isActive: $navigateToGame) {
                         Text("Start Round")
                             .padding()
-                            .background(Color(red: 0.051, green: 0.758, blue: 0.547))
+                            .background(Color(red: 0.145, green: 0.376, blue: 0.325))
                             .foregroundColor(.white)
                             .cornerRadius(8)
                     }
@@ -50,6 +50,9 @@ struct AddPlayers: View {
     @State private var selectedHoles: String = "9 holes"
     
     @State private var navigateToPlay = false
+    
+    @State private var showAlert = false // State to control alert visibility
+
 
     var body: some View {
         ZStack {
@@ -82,7 +85,7 @@ struct AddPlayers: View {
                         Text("Add Player")
                             .padding(.horizontal)
                             .padding(.vertical, 5)
-                            .background(Color(red: 0.051, green: 0.758, blue: 0.547))
+                            .background(Color(red: 0.145, green: 0.376, blue: 0.325))
                             .foregroundColor(.white)
                             .cornerRadius(8)
                     }
@@ -93,6 +96,7 @@ struct AddPlayers: View {
                     ForEach(players) { player in
                         HStack {
                             Text(player.name)
+                            .foregroundColor(.white)
                             Spacer()
                             Button(action: {
                                 if let index = players.firstIndex(where: { $0.id == player.id }) {
@@ -106,7 +110,7 @@ struct AddPlayers: View {
                         }
                         .padding() // Add padding inside the HStack
                         .background(RoundedRectangle(cornerRadius: 10) // Use RoundedRectangle for corner radius
-                        .fill(Color(red: 0.051, green: 0.758, blue: 0.547))) // Fill with the bubble color
+                        .fill(Color(red: 0.145, green: 0.376, blue: 0.325))) // Fill with the bubble color
                         .padding(.vertical, 8) // Add vertical space between list elements
                         .listRowInsets(EdgeInsets()) // Remove default list row padding
                         .listRowSeparator(.hidden)
@@ -122,14 +126,35 @@ struct AddPlayers: View {
                 
                 Spacer()
                 
+                Button(action: {
+                                    if players.count == 3 {
+                                        navigateToPlay = true
+                                    } else {
+                                        showAlert = true // Show alert if there are not exactly 3 players
+                                    }
+                                }) {
+                                    Text("Start Round")
+                                        .foregroundColor(.white)
+                                        .padding()
+                                        .frame(maxWidth: .infinity)
+                                        .background(players.count == 3 ? Color(red: 0.145, green: 0.376, blue: 0.325) : Color.gray)
+                                        .cornerRadius(8)
+                                }
+                                .disabled(players.count != 3) // Disable the button if there aren't exactly 3 players
+                                .alert(isPresented: $showAlert) { // Alert for incorrect number of players
+                                    Alert(
+                                        title: Text("Invalid Player Count"),
+                                        message: Text("The game must be played with exactly 3 players."),
+                                        dismissButton: .default(Text("OK"))
+                                    )
+                                }
+                
+                
                 NavigationLink(destination: PlayGame(viewModel: GameViewModel(players: players, selectedHoles: selectedHoles)), isActive: $navigateToPlay) {
-                    Text("Start Round")
-                    
-                        .padding()
-                        .background(Color(red: 0.051, green: 0.758, blue: 0.547))
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
-                }
+                                    EmptyView()
+                                }
+                                .hidden() // Hide the navigation link
+
             }
             .padding()
         }
@@ -146,7 +171,7 @@ struct TwoSidedButton: View {
             }) {
                 Text("9 holes")
                     .padding()
-                    .background(selectedOption == "9 holes" ? Color(red: 0.051, green: 0.758, blue: 0.547) : Color.gray)
+                    .background(selectedOption == "9 holes" ? Color(red: 0.145, green: 0.376, blue: 0.325) : Color.gray)
                     .foregroundColor(selectedOption == "9 holes" ? .white : .black)
                     .cornerRadius(8)
             }
@@ -156,7 +181,7 @@ struct TwoSidedButton: View {
             }) {
                 Text("18 holes")
                     .padding()
-                    .background(selectedOption == "18 holes" ? Color(red: 0.051, green: 0.758, blue: 0.547) : Color.gray)
+                    .background(selectedOption == "18 holes" ? Color(red: 0.145, green: 0.376, blue: 0.325) : Color.gray)
                     .foregroundColor(selectedOption == "18 holes" ? .white : .black)
                     .cornerRadius(8)
             }
@@ -186,7 +211,7 @@ struct PlayGame: View {
                     Text("View Scorecard")
                         .padding(.vertical, 10)
                         .padding(.horizontal, 10)
-                        .background(Color(red: 0.051, green: 0.758, blue: 0.547)) // Use your app's theme color
+                        .background(Color(red: 0.145, green: 0.376, blue: 0.325))
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
@@ -194,7 +219,7 @@ struct PlayGame: View {
                 
                 Image("Nines logo 3")
                     .resizable()
-                    .scaledToFit() // or .scaledToFill() based on your preference
+                    .scaledToFit()
                     .scaleEffect(1.1)
                 
                 Spacer(minLength: 20) // Adds a bit of space before the title
@@ -232,7 +257,7 @@ struct PlayGame: View {
                                 .padding(.trailing)
                         }
                         .frame(height: 44)
-                        .background(Color(red: 0.039, green: 0.153, blue: 0.239)) // Change this to your preferred background color
+                        .background(Color(red: 0.039, green: 0.153, blue: 0.239))
                         .cornerRadius(10)
                         .padding(.horizontal)
                         .foregroundColor(.white)
@@ -300,7 +325,7 @@ struct PlayGame: View {
                 }
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(Color(red: 0.051, green: 0.758, blue: 0.547)) // Change this to your preferred button color
+                .background(Color(red: 0.145, green: 0.376, blue: 0.325))
                 .foregroundColor(.white)
                 .cornerRadius(8)
                 .padding(.horizontal)
@@ -393,7 +418,7 @@ struct viewScorecard: View {
         }
     }
 }
-
+// View Modifier that makes sure that even with a long name, the
 struct TruncateModifier: ViewModifier {
     var maxLength: Int
 
